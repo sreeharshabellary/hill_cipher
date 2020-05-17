@@ -1,7 +1,7 @@
 import numpy as np
 from egcd import egcd
 
-alpha='_abcdefghijklmnopqrstuvwxyz '		       #sample space 
+alpha='_abcdefghijklmnopqrstuvwxyz '		    #sample space 
 letter_to_ind=dict(zip(alpha, range(len(alpha))))   #dictionary to store a=0, b=1 ...
 ind_to_letter=dict(zip(range(len(alpha)), alpha))   #dictionary to go from indexing to letters, ie, 0=a, 1=b, ...
 mod=len(alpha) 	
@@ -23,15 +23,15 @@ def encrypt(pt, k) :
 	print("\nPlain text as numbers split into a matrix : \n ", split_pt) 
 	print("\nThe matrix of numbers after the encoding has been done : \n") 	
 	for p in split_pt :
-		p = np.transpose(np.asarray(p))[ : , np.newaxis]	#converted list items from above to arrays 
-														#using them row by row, so its the same as single row matrices
-		while p.shape[0] != k.shape[0] :					#checking if the matrix of the plain text is complete or not 
-														#otherwise appending a space at the end to m ake it a complete matrix
+		p = np.transpose(np.asarray(p))[ : , np.newaxis]   #converted list items from above to arrays 
+								   #using them row by row, so its the same as single row matrices
+		while p.shape[0] != k.shape[0] :	#checking if the matrix of the plain text is complete or not 
+							#otherwise appending a space at the end to m ake it a complete matrix
 			p=np.append(p, 27)[ : , np.newaxis]
 		num_pt = np.dot(k,p) % mod							
 		
 		print(num_pt)	
-		for i in range (num_pt.shape[0]) :					#converting the numbers back to letters and returning the encrypted text
+		for i in range (num_pt.shape[0]) : #converting the numbers back to letters and returning the encrypted text
 			n = int(num_pt[i,0]) 
 			enc_text += ind_to_letter[n]
 
@@ -48,7 +48,7 @@ def decrypt(ct, kinv) :
 	ct_as_num=[]
 	
 	for i in ct :
-		ct_as_num.append(letter_to_ind[i])				#converted cipher text to respective index numbers
+		ct_as_num.append(letter_to_ind[i])	#converted cipher text to respective index numbers
 
 	print("\nEncrypted text as numbers in a list : ", ct_as_num)	
 	split_ct = [ct_as_num [ j : j+int(kinv.shape[0]) ] for j in range (0, len(ct_as_num), int(kinv.shape[0] )) ]		 	
@@ -56,15 +56,15 @@ def decrypt(ct, kinv) :
 	print("\nThe matrix of numbers after the decoding has been done : \n") 
 
 	for c in split_ct :
-		c = np.transpose(np.asarray(c))[ : , np.newaxis]		#converted list items from above to arrays
-		while c.shape[0] != kinv.shape[0] :				#checking if the matrix of the plain text is complete or not 
-														#otherwise appending a space at the end to make it a complete matrix
+		c = np.transpose(np.asarray(c))[ : , np.newaxis]	#converted list items from above to arrays
+		while c.shape[0] != kinv.shape[0] :	#checking if the matrix of the plain text is complete or not 
+							#otherwise appending a space at the end to make it a complete matrix
 			c=np.append(c, 27)[ : , np.newaxis]
 		num_ct = np.dot(kinv,c) % mod		
 
 		print(num_ct)
 
-		for i in range (num_ct.shape[0]) :					#converting the numbers back to letters and returning the encrypted text
+		for i in range (num_ct.shape[0]) :	#converting the numbers back to letters and returning the encrypted text
 			n = int(num_ct[i,0]) 
 			dec_text += ind_to_letter[n]
 
@@ -77,7 +77,7 @@ def mat_key_inv(key, mod) :
 	#returns the inverse of the given matrix in the required modulus
 
 	det=int(np.round(np.linalg.det(key)))	#finds the determinant of the matrix : message
-	det_inv=egcd(det, mod)[1] % mod	#finds det of the inverse of the matrix in the required modulus
+	det_inv=egcd(det, mod)[1] % mod		#finds det of the inverse of the matrix in the required modulus
 	key_inv_matrix = det_inv * np.round(det * np.linalg.inv(key)) % mod	
 	print("\nInverse of the key matrix is : \n", key_inv_matrix)
 	return key_inv_matrix	
